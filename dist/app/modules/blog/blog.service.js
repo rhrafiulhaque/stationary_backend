@@ -23,7 +23,7 @@ const createBlogIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function
     return result;
 });
 const getAllBlogFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const blogQuery = new QueryBuilder_1.default(blog_model_1.Blog.find().populate("author"), query)
+    const blogQuery = new QueryBuilder_1.default(blog_model_1.Blog.find(), query)
         .search(blog_constant_1.blogSearchableFields)
         .filter()
         .sort()
@@ -32,37 +32,34 @@ const getAllBlogFromDB = (query) => __awaiter(void 0, void 0, void 0, function* 
     const result = yield blogQuery.modelQuery;
     return result;
 });
-const updateBlogByIdToDB = (blogId, userId, updatedData) => __awaiter(void 0, void 0, void 0, function* () {
+const updateBlogByIdToDB = (blogId, updatedData) => __awaiter(void 0, void 0, void 0, function* () {
     const isBlogExist = yield blog_model_1.Blog.findById(blogId);
     if (!isBlogExist) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Blog is not found");
     }
-    if (isBlogExist.author.toString() !== userId) {
-        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "You are not authorized to update this blog");
-    }
-    const result = yield blog_model_1.Blog.findByIdAndUpdate(blogId, updatedData, {
+    const result = yield blog_model_1.Blog.findByIdAndUpdate({ _id: blogId }, updatedData, {
         new: true,
         runValidators: true,
         strict: true,
     });
     return result;
 });
-const deleteBlogByIdFromDB = (userId, blogId, userRole) => __awaiter(void 0, void 0, void 0, function* () {
+const getSingleBlogFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield blog_model_1.Blog.findById(id);
+    return result;
+});
+const deleteBlogByIdFromDB = (blogId) => __awaiter(void 0, void 0, void 0, function* () {
     const isBlogExist = yield blog_model_1.Blog.findById(blogId);
     if (!isBlogExist) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Blog is not found");
     }
-    if (isBlogExist.author.toString() === userId || userRole === "admin") {
-        const result = yield blog_model_1.Blog.findByIdAndDelete(blogId);
-        return result;
-    }
-    else {
-        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "You are not authorized to delete this blog");
-    }
+    const result = yield blog_model_1.Blog.findByIdAndDelete(blogId);
+    return result;
 });
 exports.blogServices = {
     createBlogIntoDb,
     getAllBlogFromDB,
     updateBlogByIdToDB,
     deleteBlogByIdFromDB,
+    getSingleBlogFromDB,
 };

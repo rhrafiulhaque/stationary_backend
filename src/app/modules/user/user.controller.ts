@@ -13,12 +13,13 @@ const createUser = catchAsync(async (req, res, next) => {
   });
 });
 const getAllUsers = catchAsync(async (req, res, next) => {
-  const result = await userServices.getAllUsersFromDB();
+  const result = await userServices.getAllUsersFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "User Retrive Successfull",
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 const getMe = catchAsync(async (req, res, next) => {

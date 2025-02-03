@@ -1,13 +1,24 @@
 import { Types } from "mongoose";
 
 export type TUser = {
+  id?: string;
   name: string;
   email: string;
   password: string;
-  phone: number;
+  phone: string;
+  address: string;
   role: "admin" | "user";
   isBlocked: boolean;
   profilePhoto?: string;
+};
+
+export type TUserFromToken = {
+  email: string;
+  id: string;
+  role: string;
+  name: string;
+  iat: number;
+  exp: number;
 };
 
 export type TUserToken = {
@@ -15,7 +26,7 @@ export type TUserToken = {
   name: string;
   email: string;
   password: string;
-  phone: number;
+  phone: string;
   profilePhoto?: string;
   role: "admin" | "user";
   isBlocked: boolean;

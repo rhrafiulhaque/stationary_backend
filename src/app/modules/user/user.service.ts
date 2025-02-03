@@ -1,5 +1,7 @@
 import httpStatus from "http-status";
+import QueryBuilder from "../../builder/QueryBuilder";
 import AppError from "../../errors/AppError";
+import { userSearchableFields } from "../products/product.constants";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
@@ -11,9 +13,20 @@ const createUserIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
   return result;
 };
-const getAllUsersFromDB = async () => {
-  const result = await User.find();
-  return result;
+const getAllUsersFromDB = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(User.find(), query)
+    .search(userSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await userQuery.countTotal();
+  const result = await userQuery.modelQuery;
+  return {
+    meta,
+    result,
+  };
 };
 const getMeFromDB = async (
   requesteUserEmail: string,
@@ -68,6 +81,7 @@ const updateUserData = async (
     {
       name: updateData.name,
       phone: updateData.phone,
+      address: updateData.address,
     },
     {
       new: true,

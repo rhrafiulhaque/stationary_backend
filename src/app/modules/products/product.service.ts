@@ -33,7 +33,9 @@ const getAllProductFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getProductByIdFromDB = async (id: string) => {
-  const result = await Product.findById(id);
+  const result = await Product.findById(id)
+    .populate("brand")
+    .populate("category");
   return result;
 };
 
@@ -46,7 +48,7 @@ const updateProductByIdInDB = async (id: string, data: Partial<IProduct>) => {
       id,
       {
         ...data,
-        inStock: data.quantity && data.quantity > 0 ? true : false,
+        inStock: Number(data.stock) && Number(data.stock) > 0 ? true : false,
       },
       { new: true }
     );

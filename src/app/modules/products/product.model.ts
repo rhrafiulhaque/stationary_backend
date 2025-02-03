@@ -14,7 +14,7 @@ const ProductSchema = new Schema<IProduct>(
       ref: "Brand",
     },
     price: {
-      type: Number,
+      type: String,
       required: true,
       min: 0,
     },
@@ -27,14 +27,15 @@ const ProductSchema = new Schema<IProduct>(
       type: String,
       required: true,
     },
-    quantity: {
-      type: Number,
+    stock: {
+      type: String,
       required: true,
       min: 0,
     },
     inStock: {
       type: Boolean,
       required: true,
+      default: true,
     },
     image: {
       type: String,

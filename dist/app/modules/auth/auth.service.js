@@ -21,7 +21,7 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const jwt_1 = __importDefault(require("../../utils/jwt"));
 const user_model_1 = require("../user/user.model");
 const loginUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const userExist = yield user_model_1.User.findOne({ email: payload.email }).select("+password");
+    const userExist = (yield user_model_1.User.findOne({ email: payload.email }).select("+password"));
     if (!userExist) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Email Not Found");
     }
@@ -31,7 +31,7 @@ const loginUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function*
     }
     const isPasswordMatched = yield bcrypt_1.default.compare(payload === null || payload === void 0 ? void 0 : payload.password, userExist === null || userExist === void 0 ? void 0 : userExist.password);
     if (!isPasswordMatched) {
-        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Password Do not Match");
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Password Does not Match");
     }
     const token = (0, jwt_1.default)(userExist);
     return token;

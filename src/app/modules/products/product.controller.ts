@@ -7,7 +7,8 @@ import { productService } from "./product.service";
 
 const createProduct = catchAsync(async (req, res, next) => {
   const product = req.body;
-  console.log(product);
+  product.price = Number(product.price);
+  product.quantity = Number(product.quantity);
   let image = null;
   if (req.file) {
     try {

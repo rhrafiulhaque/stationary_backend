@@ -3,10 +3,10 @@ import { Types } from "mongoose";
 export interface IProduct {
   name: string;
   brand: Types.ObjectId;
-  price: number;
+  price: string;
   category: Types.ObjectId;
   description: string;
-  quantity: number;
+  stock: string;
   inStock: boolean;
   image: string;
 }

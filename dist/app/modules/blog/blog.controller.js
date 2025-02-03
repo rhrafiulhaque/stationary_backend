@@ -18,9 +18,7 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const blog_service_1 = require("./blog.service");
 const createBlog = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.user;
-    const blog = Object.assign(Object.assign({}, req.body), { author: id });
-    const result = yield blog_service_1.blogServices.createBlogIntoDb(blog);
+    const result = yield blog_service_1.blogServices.createBlogIntoDb(req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -37,11 +35,20 @@ const getAllBlog = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 
         data: result,
     });
 }));
+const getSingleBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { blogId } = req.params;
+    const result = yield blog_service_1.blogServices.getSingleBlogFromDB(blogId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Blog is retrieved successfully",
+        data: result,
+    });
+}));
 const updateBlogById = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { blogId } = req.params;
-    const userId = req.user.id;
     const updatedData = req.body;
-    const result = yield blog_service_1.blogServices.updateBlogByIdToDB(blogId, userId, updatedData);
+    const result = yield blog_service_1.blogServices.updateBlogByIdToDB(blogId, updatedData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -51,9 +58,7 @@ const updateBlogById = (0, catchAsync_1.default)((req, res, next) => __awaiter(v
 }));
 const deleteBlogById = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { blogId } = req.params;
-    const userId = req.user.id;
-    const userRole = req.user.role;
-    const result = yield blog_service_1.blogServices.deleteBlogByIdFromDB(userId, blogId, userRole);
+    const result = yield blog_service_1.blogServices.deleteBlogByIdFromDB(blogId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -66,4 +71,5 @@ exports.blogControllers = {
     getAllBlog,
     updateBlogById,
     deleteBlogById,
+    getSingleBlog,
 };

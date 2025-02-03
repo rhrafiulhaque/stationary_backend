@@ -10,9 +10,8 @@ const router = express.Router();
 router.post(
   "/create-product",
   auth("admin"),
-  upload.single("file"),
+  upload.single("image"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
     next();
   },
   validateRequest(createProductZodSchema),

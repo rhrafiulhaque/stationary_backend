@@ -1,372 +1,139 @@
-# Blog Project
+# Stationary E-Commerce Backend
 
-## Overview
-
-The Blog Project is a backend system designed for a blogging platform. Users can write, update, and delete their blogs, while Admins have special permissions for user and blog management. The system incorporates secure authentication, role-based access control, and public APIs for viewing blogs with search, sort, and filter functionalities.
-
----
-
-## Technologies Used
-
-- **TypeScript**
-- **Node.js**
-- **Express.js**
-- **MongoDB with Mongoose**
-
----
-
-## Installation
-
-To get started with this project, follow these steps:
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone https://github.com/rhrafiulhaque/blog-backend
-   cd blog-backend
-
-   ```
-
-2. **Install The Dependencies**:
-
-   ```bash
-   npm install
-   npm run dev
-   ```
-
-   This will start the server on the specified port (default: 5000).
-
-3. **Set up your environment**: Create a `.env` file in the root directory for environment variables. For example, you might need to specify a MongoDB connection string:
-
-   ```bash
-   MONGO_URI="your_mongodb_connection_string"
-
-   ```
-
-### **Check the API**:
-
-Once the server is running, you can access the live API and see it in action by visiting: [Blog Project Backend API](https://blog-projeect.vercel.app/)
+This is the backend for a stationary e-commerce platform built with **Node.js**, **Express**, and **MongoDB**. It provides RESTful APIs for user authentication, product management, order processing, and more. The backend is designed to support both **user** and **admin** roles, ensuring secure and efficient management of the e-commerce platform.
 
 ## Features
 
-### User Roles
+- **User Authentication**:
 
-#### Admin:
+  - User registration and login.
+  - JWT-based authentication.
+  - Refresh token for secure session management.
 
-- Created manually in the database with predefined credentials.
-- Can delete any blog.
-- Can block any user by updating the `isBlocked` property.
-- **Cannot update any blog.**
+- **Product Management**:
 
-#### User:
+  - Admin can create, update, delete, and view products.
+  - Users can browse products and view product details.
 
-- Can register and log in.
-- Can create blogs (only when logged in).
-- Can update and delete their own blogs.
-- **Cannot perform admin actions.**
+- **Brand Management**:
 
-### Authentication & Authorization
+  - Admin can create, update, delete, and view brands.
 
-#### Authentication:
+- **Category Management**:
 
-- Users must log in to perform write, update, and delete operations.
+  - Admin can create, update, delete, and view categories.
 
-#### Authorization:
+- **Order Management**:
 
-- Admin and User roles are differentiated and secured.
+  - Users can create orders and view their order history.
+  - Admin can update order status (e.g., paid, shipped).
 
-### Blog API
+- **User Management**:
+  - Admin can view all users and block/unblock users.
+  - Users can update their profile information.
 
-- A public API for reading blogs:
-  - Includes blog title, content, author details, and other necessary information.
-  - Supports **search**, **sorting**, and **filtering** functionalities.
+## Technologies Used
 
----
+- **Backend**:
 
-## Models
+  - Node.js
+  - Express.js
+  - MongoDB (Database)
+  - Mongoose (ODM for MongoDB)
+  - JWT (JSON Web Tokens) for authentication
+  - Zod for schema validation
+  - Cloudinary for image uploads
 
-### User Model
+- **Tools**:
+  - Postman (API testing)
+  - Git (Version control)
 
-```javascript
-{
-  name: string,
-  email: string,
-  password: string,
-  role: "admin" | "user", // Default is "user"
-  isBlocked: boolean, // Default is false
-  createdAt: Date,
-  updatedAt: Date
-}
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rhrafiulhaque/stationaary-backend.git
+   ```
+2. Navigate to the project directory:
+
+```bash
+cd stationaary-backend
 ```
 
-### Blog Model
+3. Install dependencies:
 
-```javascript
-{
-  title: string,
-  content: string,
-  author: ObjectId, // Reference to User model
-  isPublished: boolean, // Default is true
-  createdAt: Date,
-  updatedAt: Date
-}
+```bash
+npm install
 ```
 
----
+4. Set up environment variables:
 
-## API Endpoints
+- Create a .env file in the root directory.
 
-### 1. Authentication
+- Add the following variables:
 
-#### 1.1 Register User
-
-**POST** `/api/auth/register`
-
-**Request Body:**
-
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "securepassword"
-}
+```bash
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=1d
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
-**Response:**
+3. Start the development server:
 
-- **Success (201):**
-
-```json
-{
-  "success": true,
-  "message": "User registered successfully",
-  "statusCode": 201,
-  "data": {
-    "_id": "string",
-    "name": "string",
-    "email": "string"
-  }
-}
+```bash
+npm start
 ```
 
-- **Failure (400):**
+# API Routes Documentation
 
-```json
-{
-  "success": false,
-  "message": "Validation error",
-  "statusCode": 400,
-  "error": { "details" },
-  "stack": "error stack"
-}
-```
+## Authentication Routes
 
-#### 1.2 Login User
+- **POST /api/v1/auth/register**: Register a new user.
+- **POST /api/v1/auth/login**: Log in a user.
+- **POST /api/v1/auth/refresh-token**: Refresh access token using a refresh token.
 
-**POST** `/api/auth/login`
+## User Routes
 
-**Request Body:**
+- **GET /api/v1/users/get-users**: Get all users (Admin only).
+- **GET /api/v1/users/get-me**: Get current user's profile (Admin or User).
+- **PATCH /api/v1/users/:userId/block**: Block a user (Admin only).
+- **PATCH /api/v1/users/update-user**: Update user profile (Admin or User).
 
-```json
-{
-  "email": "john@example.com",
-  "password": "securepassword"
-}
-```
+## Product Routes
 
-**Response:**
+- **POST /api/v1/products/create-product**: Create a new product (Admin only).
+- **GET /api/v1/products/all-products**: Get all products.
+- **GET /api/v1/products/:productId**: Get a single product by ID.
+- **PATCH /api/v1/products/:productId**: Update a product (Admin only).
+- **DELETE /api/v1/products/:productId**: Delete a product (Admin only).
 
-- **Success (200):**
+## Brand Routes
 
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "statusCode": 200,
-  "data": {
-    "token": "string"
-  }
-}
-```
+- **POST /api/v1/brands/create-brand**: Create a new brand (Admin only).
+- **GET /api/v1/brands/all-brands**: Get all brands.
+- **GET /api/v1/brands/:brandId**: Get a single brand by ID.
+- **PATCH /api/v1/brands/:brandId**: Update a brand (Admin only).
+- **DELETE /api/v1/brands/:brandId**: Delete a brand (Admin only).
 
-- **Failure (401):**
+## Category Routes
 
-```json
-{
-  "success": false,
-  "message": "Invalid credentials",
-  "statusCode": 401,
-  "error": { "details" },
-  "stack": "error stack"
-}
-```
+- **POST /api/v1/categories/create-category**: Create a new category (Admin only).
+- **GET /api/v1/categories/all-categories**: Get all categories.
+- **GET /api/v1/categories/:catId**: Get a single category by ID.
+- **PATCH /api/v1/categories/:catId**: Update a category (Admin only).
+- **DELETE /api/v1/categories/:catId**: Delete a category (Admin only).
 
----
+## Order Routes
 
-### 2. Blog Management
+- **POST /api/v1/orders/create-order**: Create a new order (User only).
+- **GET /api/v1/orders/verify**: Verify payment status.
+- **GET /api/v1/orders/all-orders**: Get all orders (Admin or User).
+- **PATCH /api/v1/orders/:orderId**: Update order status (Admin only).
 
-#### 2.1 Create Blog
+## Live Demo
 
-**POST** `/api/blogs`
-
-**Request Header:**
-`Authorization: Bearer <token>`
-
-**Request Body:**
-
-```json
-{
-  "title": "My First Blog",
-  "content": "This is the content of my blog."
-}
-```
-
-**Response:**
-
-- **Success (201):**
-
-```json
-{
-  "success": true,
-  "message": "Blog created successfully",
-  "statusCode": 201,
-  "data": {
-    "_id": "string",
-    "title": "string",
-    "content": "string",
-    "author": { "details" }
-  }
-}
-```
-
-#### 2.2 Update Blog
-
-**PATCH** `/api/blogs/:id`
-
-**Request Header:**
-`Authorization: Bearer <token>`
-
-**Request Body:**
-
-```json
-{
-  "title": "Updated Blog Title",
-  "content": "Updated content."
-}
-```
-
-**Response:**
-
-- **Success (200):**
-
-```json
-{
-  "success": true,
-  "message": "Blog updated successfully",
-  "statusCode": 200,
-  "data": {
-    "_id": "string",
-    "title": "string",
-    "content": "string",
-    "author": { "details" }
-  }
-}
-```
-
-#### 2.3 Delete Blog
-
-**DELETE** `/api/blogs/:id`
-
-**Request Header:**
-`Authorization: Bearer <token>`
-
-**Response:**
-
-- **Success (200):**
-
-```json
-{
-  "success": true,
-  "message": "Blog deleted successfully",
-  "statusCode": 200
-}
-```
-
-#### 2.4 Get All Blogs (Public)
-
-**GET** `/api/blogs`
-
-**Query Parameters:**
-
-- `search`: Search blogs by title or content.
-- `sortBy`: Sort blogs by specific fields (e.g., `createdAt`, `title`).
-- `sortOrder`: Sorting order (`asc` or `desc`).
-- `filter`: Filter blogs by author ID.
-
-**Example:**
-
-```plaintext
-/api/blogs?search=technology&sortBy=createdAt&sortOrder=desc&filter=authorId
-```
-
-**Response:**
-
-- **Success (200):**
-
-```json
-{
-  "success": true,
-  "message": "Blogs fetched successfully",
-  "statusCode": 200,
-  "data": [
-    {
-      "_id": "string",
-      "title": "string",
-      "content": "string",
-      "author": { "details" }
-    }
-  ]
-}
-```
-
----
-
-### 3. Admin Actions
-
-#### 3.1 Block User
-
-**PATCH** `/api/admin/users/:userId/block`
-
-**Request Header:**
-`Authorization: Bearer <admin_token>`
-
-**Response:**
-
-- **Success (200):**
-
-```json
-{
-  "success": true,
-  "message": "User blocked successfully",
-  "statusCode": 200
-}
-```
-
-#### 3.2 Delete Blog
-
-**DELETE** `/api/admin/blogs/:id`
-
-**Request Header:**
-`Authorization: Bearer <admin_token>`
-
-**Response:**
-
-- **Success (200):**
-
-```json
-{
-  "success": true,
-  "message": "Blog deleted successfully",
-  "statusCode": 200
-}
-```
+Check out the live demo of the backend [https://stationaary-backend.vercel.app/](https://stationaary-backend.vercel.app/).

@@ -19,8 +19,12 @@ const userSchema = new Schema<TUser>(
       required: true,
       select: 0,
     },
+    address: {
+      type: String,
+      required: true,
+    },
     phone: {
-      type: Number,
+      type: String,
       required: true,
     },
     role: {

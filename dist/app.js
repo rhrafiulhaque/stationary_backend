@@ -10,12 +10,12 @@ const globalErrorHandler_1 = __importDefault(require("./app/middlware/globalErro
 const notFound_1 = __importDefault(require("./app/middlware/notFound"));
 const routes_1 = __importDefault(require("./app/routes"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ origin: ["https://stationaary.vercel.app"], credentials: true }));
 //parser
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
-app.use("/api", routes_1.default);
+app.use("/api/v1", routes_1.default);
 //Testing
 app.get("/", (req, res) => {
     res.send("Hello From this project");

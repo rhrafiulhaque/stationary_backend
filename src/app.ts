@@ -7,7 +7,9 @@ import router from "./app/routes";
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+  cors({ origin: ["https://stationaary.vercel.app"], credentials: true })
+);
 
 //parser
 app.use(express.json());

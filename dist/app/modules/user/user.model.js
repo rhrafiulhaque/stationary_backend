@@ -31,6 +31,14 @@ const userSchema = new mongoose_1.Schema({
         required: true,
         select: 0,
     },
+    address: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+    },
     role: {
         type: String,
         enum: ["admin", "user"],
@@ -39,6 +47,11 @@ const userSchema = new mongoose_1.Schema({
     isBlocked: {
         type: Boolean,
         default: false,
+    },
+    profilePhoto: {
+        type: String,
+        default: null,
+        optional: true,
     },
 }, {
     timestamps: true,

@@ -4,7 +4,8 @@ const userValidationSchemaZod = z.object({
   body: z.object({
     name: z.string().nonempty("Name is required"),
     email: z.string().email("Invalid email format"),
-    phone: z.number(),
+    phone: z.string(),
+    address: z.string(),
     profilePhoto: z.string().optional(),
     password: z
       .string()

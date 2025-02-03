@@ -6,6 +6,9 @@ const userValidationSchemaZod = zod_1.z.object({
     body: zod_1.z.object({
         name: zod_1.z.string().nonempty("Name is required"),
         email: zod_1.z.string().email("Invalid email format"),
+        phone: zod_1.z.string(),
+        address: zod_1.z.string(),
+        profilePhoto: zod_1.z.string().optional(),
         password: zod_1.z
             .string()
             .min(6, "Password must be at least 6 characters")

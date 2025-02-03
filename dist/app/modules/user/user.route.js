@@ -5,9 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRoutes = void 0;
 const express_1 = __importDefault(require("express"));
-const validateRequest_1 = __importDefault(require("../../middlware/validateRequest"));
+const auth_1 = __importDefault(require("../../middlware/auth"));
 const user_controller_1 = require("./user.controller");
-const user_validation_1 = require("./user.validation");
 const router = express_1.default.Router();
-router.post("/register", (0, validateRequest_1.default)(user_validation_1.userValidation.userValidationSchemaZod), user_controller_1.userControllers.createUser);
+router.get("/get-users", (0, auth_1.default)("admin"), user_controller_1.userControllers.getAllUsers);
+router.get("/get-me", (0, auth_1.default)("admin", "user"), user_controller_1.userControllers.getMe);
+router.patch("/:userId/block", (0, auth_1.default)("admin"), user_controller_1.userControllers.blockUser);
+router.patch("/update-user", (0, auth_1.default)("admin", "user"), user_controller_1.userControllers.updateUser);
 exports.UserRoutes = router;
